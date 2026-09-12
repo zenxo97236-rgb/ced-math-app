@@ -1,5 +1,5 @@
 import './globals.css';
-import { Analytics } from "@vercel/analytics/react"; // 1. นำเข้า Analytics
+import { Analytics } from "@vercel/analytics/next"; // 1. นำเข้า Analytics
 
 export const metadata = {
   title: 'CED Math Tools',
