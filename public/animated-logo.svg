@@ -1,0 +1,27 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 256" width="100%" height="100%" preserveAspectRatio="xMidYMid meet">
+  <style>
+    .path-anim {
+      fill: transparent;
+      stroke: #ffffff; /* เส้นสีขาว */
+      stroke-width: 15; /* ความหนาของเส้น */
+      stroke-linejoin: round;
+      stroke-linecap: round;
+      stroke-dasharray: 1;
+      stroke-dashoffset: 1;
+      /* อนิเมชัน 1: วาดเส้น 2.5 วินาที | อนิเมชัน 2: ถมสีขาว 1 วินาที (เริ่มหลังวาดเสร็จ) */
+      animation: draw-line 2.5s ease-in-out forwards, fill-color 1s ease-in-out 2.5s forwards;
+    }
+    @keyframes draw-line {
+      to { stroke-dashoffset: 0; }
+    }
+    @keyframes fill-color {
+      to { fill: #ffffff; }
+    }
+  </style>
+
+  <g transform="translate(0, 256) scale(0.1, -0.1)">
+    <!-- pathLength="1" คือเทคนิคบังคับให้เส้นสั้นและเส้นยาวใช้เวลาวาดจบพร้อมกันเป๊ะ -->
+    <path class="path-anim" pathLength="1" d="M500 1716 c-132 -37 -254 -164 -285 -297 -15 -67 -18 -152 -7 -174 3 -5 7 -19 8 -32 9 -79 105 -191 207 -241 l64 -32 189 0 c226 0 254 6 315 69 57 59 59 68 56 266 l-2 160 -68 64 -67 64 0 -220 c0 -290 17 -268 -207 -268 -112 0 -180 5 -205 13 -40 14 -118 80 -118 100 0 7 -4 12 -9 12 -25 0 -43 116 -29 186 10 49 20 65 72 119 77 80 89 83 336 86 l195 3 189 -187 190 -188 60 58 c33 32 62 62 64 67 3 4 16 18 29 30 14 11 51 46 83 76 l57 55 77 0 c44 0 76 -4 76 -10 0 -5 1 -134 3 -285 l2 -275 28 1 c15 1 47 2 72 3 l46 1 -1 281 -1 280 166 4 167 3 66 63 66 64 -401 3 c-220 1 -410 -1 -422 -6 -12 -4 -71 -56 -130 -116 -107 -106 -109 -108 -127 -89 -38 40 -175 180 -229 233 -30 30 -55 58 -55 63 0 13 -470 6 -520 -7z"/>
+    <path class="path-anim" pathLength="1" d="M1625 1438 c-3 -7 -32 -35 -65 -62 l-60 -50 0 -195 0 -196 71 1 c51 0 73 5 78 15 10 24 1 499 -10 499 -5 0 -12 -6 -14 -12z"/>
+  </g>
+</svg>

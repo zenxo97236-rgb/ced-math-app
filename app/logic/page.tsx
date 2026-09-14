@@ -54,7 +54,7 @@ export default function LogicApp() {
       setActiveTab(tab);
       setIsTransitioning(false);
       if (typeof window !== 'undefined') window.history.replaceState(null, '', `?tab=${tab}`);
-    }, 250);
+    }, 300); // รอให้แอนิเมชันย่อและเฟดจบก่อนสลับแท็บ
     setIsMobileMenuOpen(false);
   };
 
@@ -126,21 +126,20 @@ export default function LogicApp() {
     <div className="min-h-screen flex flex-col md:flex-row bg-gray-950 text-gray-100 font-sans selection:bg-indigo-500/30">
       
       <aside className="w-full md:w-64 bg-gray-900 shadow-xl border-b md:border-r border-gray-800 flex flex-col shrink-0 md:h-screen md:sticky md:top-0 z-40">
-        <div className="p-5 flex items-center justify-between shrink-0 border-b border-gray-800/50">
-          <Link href="/" className="group flex items-center gap-3 text-lg font-extrabold text-white hover:text-gray-300 transition-colors">
-            <span className="text-xl">⌂</span> CED
-          </Link>
-          <button onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)} className="md:hidden p-2 text-gray-400 hover:text-white transition-colors">
-            <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              {isMobileMenuOpen ? <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" /> : <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 12h16M4 18h16" />}
-            </svg>
+        <div className="p-5 flex items-center justify-between shrink-0 border-b border-white/10">
+            <Link href="/" className="group flex items-center gap-3 text-lg font-extrabold text-white hover:text-gray-300 transition-colors">
+              <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6" /></svg>
+                    Home
+            </Link>
+          <button onClick={() => setIsMobileMenuOpen(false)} className="md:hidden p-2 text-gray-400 hover:text-white transition-colors">
+              <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" /></svg>
           </button>
         </div>
         <div className={`${isMobileMenuOpen ? 'flex' : 'hidden'} md:flex flex-col p-4 gap-3 flex-1 overflow-y-auto scrollbar-hide mt-4`}>
           <Link href="/matrix" className="flex items-center gap-3 px-4 py-3 rounded-xl font-bold text-gray-400 hover:bg-gray-800 hover:text-gray-200 transition-all">
             Matrix
           </Link>
-          <Link href="/logic" className="flex items-center gap-3 px-4 py-3 rounded-xl font-bold bg-indigo-600 text-white shadow-lg shadow-indigo-900/20 transition-all">
+          <Link href="/logic" className="flex items-center gap-3 px-4 py-3 rounded-xl font-bold bg-indigo-600/90 text-white shadow-[0_0_15px_rgba(99,102,241,0.4)] border border-indigo-500/50 transition-all">
             Logic
           </Link>
           <Link href="/converter" className="flex items-center gap-3 px-4 py-3 rounded-xl font-bold text-gray-400 hover:bg-gray-800 hover:text-gray-200 transition-all">
@@ -163,7 +162,8 @@ export default function LogicApp() {
           </div>
         </div>
 
-        <div key={activeTab} className={`p-4 md:p-10 flex flex-col items-center w-full transition-all duration-300 ease-in-out transform ${isTransitioning ? 'opacity-0 translate-y-4 scale-[0.98]' : 'opacity-100 translate-y-0 scale-100'}`}>
+        {/* จุดที่ปรับปรุงแอนิเมชันให้เป็นแบบ ซูมออก(ย่อ) และ เฟดหายไป */}
+        <div key={activeTab} className={`p-4 md:p-10 flex flex-col items-center w-full transition-all duration-300 ease-in-out transform ${isTransitioning ? 'scale-90 opacity-0' : 'scale-100 opacity-100'}`}>
           {activeTab === 'truth_table' && (
             <div className="w-full max-w-4xl flex flex-col items-center">
               <div className="bg-gray-800 p-6 md:p-8 rounded-2xl shadow-sm border border-gray-700 w-full mb-10 hover:border-gray-600 transition-colors">
