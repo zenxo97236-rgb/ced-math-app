@@ -54,7 +54,7 @@ export default function LogicApp() {
       setActiveTab(tab);
       setIsTransitioning(false);
       if (typeof window !== 'undefined') window.history.replaceState(null, '', `?tab=${tab}`);
-    }, 300); // รอให้แอนิเมชันย่อและเฟดจบก่อนสลับแท็บ
+    }, 300);
     setIsMobileMenuOpen(false);
   };
 
@@ -125,17 +125,21 @@ export default function LogicApp() {
   return (
     <div className="min-h-screen flex flex-col md:flex-row bg-gray-950 text-gray-100 font-sans selection:bg-indigo-500/30">
       
-      <aside className="w-full md:w-64 bg-gray-900 shadow-xl border-b md:border-r border-gray-800 flex flex-col shrink-0 md:h-screen md:sticky md:top-0 z-40">
+      {/* 1. ฉากหลังสีดำทึบตอนกดเปิดเมนู (เหมือนหน้าเมทริกซ์) */}
+      <div className={`fixed inset-0 bg-black/60 backdrop-blur-sm z-40 md:hidden transition-opacity duration-300 ${isMobileMenuOpen ? 'opacity-100' : 'opacity-0 pointer-events-none'}`} onClick={() => setIsMobileMenuOpen(false)}></div>
+
+      {/* 2. แก้ไข Sidebar ให้ซ่อน/สไลด์ออกด้านข้างบนจอมือถือ */}
+      <aside className={`fixed md:sticky top-0 left-0 h-screen w-64 bg-gray-900 shadow-xl border-r border-gray-800 flex flex-col shrink-0 z-50 transform transition-transform duration-300 ease-in-out ${isMobileMenuOpen ? 'translate-x-0' : '-translate-x-full'} md:translate-x-0`}>
         <div className="p-5 flex items-center justify-between shrink-0 border-b border-white/10">
-            <Link href="/" className="group flex items-center gap-3 text-lg font-extrabold text-white hover:text-gray-300 transition-colors">
-              <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6" /></svg>
-                    Home
-            </Link>
+          <Link href="/" className="group flex items-center gap-3 text-lg font-extrabold text-white hover:text-gray-300 transition-colors">
+            <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6" /></svg>
+            Home
+          </Link>
           <button onClick={() => setIsMobileMenuOpen(false)} className="md:hidden p-2 text-gray-400 hover:text-white transition-colors">
-              <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" /></svg>
+            <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" /></svg>
           </button>
         </div>
-        <div className={`${isMobileMenuOpen ? 'flex' : 'hidden'} md:flex flex-col p-4 gap-3 flex-1 overflow-y-auto scrollbar-hide mt-4`}>
+        <div className="flex flex-col p-4 gap-3 flex-1 overflow-y-auto scrollbar-hide mt-4">
           <Link href="/matrix" className="flex items-center gap-3 px-4 py-3 rounded-xl font-bold text-gray-400 hover:bg-gray-800 hover:text-gray-200 transition-all">
             Matrix
           </Link>
@@ -152,17 +156,22 @@ export default function LogicApp() {
       </aside>
 
       <main className="flex-1 flex flex-col min-w-0 md:h-screen overflow-y-auto">
-        <div className="bg-gray-900 border-b border-gray-800 pt-6 md:pt-10 px-4 md:px-10 sticky top-0 z-20 shadow-sm">
-          <h1 className="text-2xl md:text-4xl font-extrabold text-white tracking-wide mb-6">
-            ตรรกศาสตร์ (Logic)
-          </h1>
+        <div className="bg-gray-900 border-b border-gray-800 pt-4 md:pt-10 px-4 md:px-10 sticky top-0 z-20 shadow-sm">
+          {/* 3. ย้ายปุ่ม Hamburger มาจัดคู่กับหัวข้อแทน เพื่อประหยัดพื้นที่บนมือถือ */}
+          <div className="flex justify-between items-center mb-6">
+            <h1 className="text-xl md:text-4xl font-extrabold text-white tracking-wide">
+              ตรรกศาสตร์ (Logic)
+            </h1>
+            <button onClick={() => setIsMobileMenuOpen(true)} className="md:hidden text-gray-400 hover:text-white">
+              <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 12h16M4 18h16" /></svg>
+            </button>
+          </div>
           <div className="flex gap-6 overflow-x-auto scrollbar-hide">
             <button onClick={() => handleTabChange('truth_table')} className={`pb-4 text-sm md:text-base font-bold whitespace-nowrap border-b-4 transition-colors ${activeTab === 'truth_table' ? 'border-indigo-500 text-indigo-400' : 'border-transparent text-gray-500 hover:text-gray-300 hover:border-gray-700'}`}>ตารางค่าความจริง</button>
             <button onClick={() => handleTabChange('equivalence')} className={`pb-4 text-sm md:text-base font-bold whitespace-nowrap border-b-4 transition-colors ${activeTab === 'equivalence' ? 'border-indigo-500 text-indigo-400' : 'border-transparent text-gray-500 hover:text-gray-300 hover:border-gray-700'}`}>พิสูจน์ความสมมูล</button>
           </div>
         </div>
 
-        {/* จุดที่ปรับปรุงแอนิเมชันให้เป็นแบบ ซูมออก(ย่อ) และ เฟดหายไป */}
         <div key={activeTab} className={`p-4 md:p-10 flex flex-col items-center w-full transition-all duration-300 ease-in-out transform ${isTransitioning ? 'scale-90 opacity-0' : 'scale-100 opacity-100'}`}>
           {activeTab === 'truth_table' && (
             <div className="w-full max-w-4xl flex flex-col items-center">
