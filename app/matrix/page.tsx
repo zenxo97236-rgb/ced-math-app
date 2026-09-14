@@ -133,15 +133,53 @@ export default function MatrixApp() {
     return det;
   };
 
-  const calcInv = (matrix: number[][], det: number): number[][] => {
+  // ฟังก์ชันหา ห.ร.ม. และจัดรูปเป็นเศษส่วนอย่างต่ำ
+  const formatFraction = (num: number, den: number) => {
+    // 1. ถ้าไม่เป็นจำนวนเต็ม ให้แสดงเป็นทศนิยม 3 ตำแหน่งเหมือนเดิม
+    if (!Number.isInteger(num) || !Number.isInteger(den)) {
+      const val = num / den;
+      return Number.isInteger(val) ? val.toString() : parseFloat(val.toFixed(3)).toString();
+    }
+    
+    // 2. กรณีเศษเป็น 0 หรือหารลงตัวเป็นจำนวนเต็ม
+    if (num === 0) return '0';
+    if (num % den === 0) return (num / den).toString();
+    
+    // 3. ทอนเป็นเศษส่วนอย่างต่ำ
+    const gcd = (a: number, b: number): number => b === 0 ? Math.abs(a) : gcd(b, a % b);
+    const divisor = gcd(num, den);
+    let n = num / divisor;
+    let d = den / divisor;
+    
+    // จัดเครื่องหมายลบให้อยู่ที่ตัวเศษเสมอ
+    if (d < 0) {
+      n = -n;
+      d = -d;
+    }
+    
+    // สร้าง UI เศษส่วนแบบซ้อนกันบนล่างสวยๆ
+    return (
+      <div className="flex flex-col items-center justify-center leading-none text-sm md:text-base">
+        <span className="border-b border-blue-400/50 pb-0.5 px-1">{n}</span>
+        <span className="pt-0.5 px-1">{d}</span>
+      </div>
+    );
+  };
+
+  // แก้ไขให้คืนค่าเป็น Object {num, den} แทนการหารตรงๆ พร้อมระบุ Type ให้ชัดเจน
+  const calcInv = (matrix: number[][], det: number): {num: number, den: number}[][] => {
     const n = matrix.length;
-    if (n === 1) return [[1 / matrix[0][0]]];
-    const adj = [];
+    
+    // เพิ่มวงเล็บก้ามปูเป็น 2 ชั้น [[...]]
+    if (n === 1) return [[{ num: 1, den: matrix[0][0] }]]; 
+    
+    // ระบุ Type ของ Array ให้ชัดเจน
+    const adj: {num: number, den: number}[][] = []; 
     for (let r = 0; r < n; r++) {
-      const adjRow = [];
+      const adjRow: {num: number, den: number}[] = [];
       for (let c = 0; c < n; c++) {
         const sub = matrix.filter((_, rowIdx) => rowIdx !== c).map(row => row.filter((_, colIdx) => colIdx !== r));
-        adjRow.push((Math.pow(-1, r + c) * calcDet(sub)) / det);
+        adjRow.push({ num: Math.pow(-1, r + c) * calcDet(sub), den: det }); 
       }
       adj.push(adjRow);
     }
@@ -189,21 +227,22 @@ export default function MatrixApp() {
       </aside>
 
       <main className="flex-1 flex flex-col min-w-0 h-screen overflow-y-auto custom-scrollbar relative">
-        <div className="md:hidden flex items-center justify-between p-4 bg-gray-900/80 backdrop-blur-xl border-b border-white/10 sticky top-0 z-30">
-          <span className="font-extrabold text-white text-lg">ระบบเมทริกซ์</span>
-          <button onClick={() => setIsMobileMenuOpen(true)} className="text-gray-400 hover:text-white">
-             <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 12h16M4 18h16" /></svg>
-          </button>
-        </div>
-
-        <div className="hidden md:block bg-gray-900/80 backdrop-blur-xl border-b border-white/10 pt-6 md:pt-10 px-4 md:px-10 sticky top-0 z-20 shadow-sm">
-          <h1 className="text-2xl md:text-4xl font-extrabold text-white tracking-wide mb-6">ระบบเมทริกซ์ (Matrix)</h1>
-          <div className="flex gap-6 overflow-x-auto custom-scrollbar">
-            <button onClick={() => handleTabChange('linear')} className={`pb-4 text-sm md:text-base font-bold whitespace-nowrap border-b-4 transition-colors ${activeTab === 'linear' ? 'border-blue-500 text-blue-400' : 'border-transparent text-gray-500 hover:text-gray-300 hover:border-gray-700'}`}>บวก / ลบ / สเกลาร์</button>
-            <button onClick={() => handleTabChange('multiply')} className={`pb-4 text-sm md:text-base font-bold whitespace-nowrap border-b-4 transition-colors ${activeTab === 'multiply' ? 'border-blue-500 text-blue-400' : 'border-transparent text-gray-500 hover:text-gray-300 hover:border-gray-700'}`}>คูณเมทริกซ์</button>
-            <button onClick={() => handleTabChange('advanced')} className={`pb-4 text-sm md:text-base font-bold whitespace-nowrap border-b-4 transition-colors ${activeTab === 'advanced' ? 'border-blue-500 text-blue-400' : 'border-transparent text-gray-500 hover:text-gray-300 hover:border-gray-700'}`}>Transpose, Det, Inv</button>
-          </div>
-        </div>
+        {/* 🟢 ส่วนหัวที่รวมปุ่มเมนูและแท็บเข้าด้วยกัน สำหรับหน้าเมทริกซ์ */}
+          <div className="bg-gray-900/80 backdrop-blur-xl border-b border-white/10 pt-4 md:pt-10 px-4 md:px-10 sticky top-0 z-20 shadow-sm">
+              <div className="flex justify-between items-center mb-6">
+                    <h1 className="text-xl md:text-4xl font-extrabold text-white tracking-wide">
+                        ระบบเมทริกซ์ (Matrix)
+                    </h1>
+              <button onClick={() => setIsMobileMenuOpen(true)} className="md:hidden text-gray-400 hover:text-white">
+                    <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 12h16M4 18h16" /></svg>
+              </button>
+              </div>
+                    <div className="flex gap-6 overflow-x-auto custom-scrollbar">
+                          <button onClick={() => handleTabChange('linear')} className={`pb-4 text-sm md:text-base font-bold whitespace-nowrap border-b-4 transition-colors ${activeTab === 'linear' ? 'border-blue-500 text-blue-400' : 'border-transparent text-gray-500 hover:text-gray-300 hover:border-gray-700'}`}>บวก / ลบ / สเกลาร์</button>
+                          <button onClick={() => handleTabChange('multiply')} className={`pb-4 text-sm md:text-base font-bold whitespace-nowrap border-b-4 transition-colors ${activeTab === 'multiply' ? 'border-blue-500 text-blue-400' : 'border-transparent text-gray-500 hover:text-gray-300 hover:border-gray-700'}`}>คูณเมทริกซ์</button>
+                          <button onClick={() => handleTabChange('advanced')} className={`pb-4 text-sm md:text-base font-bold whitespace-nowrap border-b-4 transition-colors ${activeTab === 'advanced' ? 'border-blue-500 text-blue-400' : 'border-transparent text-gray-500 hover:text-gray-300 hover:border-gray-700'}`}>Transpose, Det, Inv</button>
+                    </div>
+              </div>
 
         <div key={activeTab} className={`p-4 md:p-10 flex flex-col items-center w-full transition-all duration-300 ease-in-out transform ${isTransitioning ? 'scale-90 opacity-0' : 'scale-100 opacity-100'}`}>
           
@@ -481,9 +520,10 @@ export default function MatrixApp() {
                      </div>
                   ) : (
                     <div className={`grid gap-3 mx-auto w-fit ${getLinearGridColsClass(advCols)}`}>
-                      {advInv?.map((row, r) => row.map((val, c) => (
-                        <div key={`inv-${r}-${c}`} className="w-14 h-14 md:w-16 md:h-16 flex items-center justify-center bg-gray-900/80 border border-white/5 rounded-xl text-sm md:text-base font-bold text-blue-400 shadow-inner overflow-hidden">
-                          {formatRes(val)}
+                      {advInv?.map((row, r) => row.map((cell, c) => (
+                        <div key={`inv-${r}-${c}`} className="w-14 h-14 md:w-16 md:h-16 flex items-center justify-center bg-gray-900/80 border border-white/5 rounded-xl font-bold text-blue-400 shadow-inner overflow-hidden">
+                          {/* นำฟังก์ชันจัดรูปเศษส่วนมาใช้ โดยส่งค่าตัวเศษและตัวส่วนเข้าไป */}
+                          {formatFraction(cell.num, cell.den)}
                         </div>
                       )))}
                     </div>

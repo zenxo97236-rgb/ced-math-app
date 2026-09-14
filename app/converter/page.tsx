@@ -223,20 +223,21 @@ export default function NumberSystemApp() {
       </aside>
 
       <main className="flex-1 flex flex-col min-w-0 h-screen overflow-y-auto custom-scrollbar relative">
-        <div className="md:hidden flex items-center justify-between p-4 bg-gray-900/80 backdrop-blur-xl border-b border-white/10 sticky top-0 z-30">
-          <span className="font-extrabold text-white text-lg">ระบบเลขฐาน</span>
-          <button onClick={() => setIsMobileMenuOpen(true)} className="text-gray-400 hover:text-white">
-             <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 12h16M4 18h16" /></svg>
-          </button>
-        </div>
-
-        <div className="hidden md:block bg-gray-900/80 backdrop-blur-xl border-b border-white/10 pt-6 md:pt-10 px-4 md:px-10 sticky top-0 z-20 shadow-sm">
-          <h1 className="text-2xl md:text-4xl font-extrabold text-white tracking-wide mb-6">ระบบเลขฐาน (Number System)</h1>
+        {/* 🟢 ส่วนหัวที่รวมปุ่มเมนูและแท็บเข้าด้วยกัน */}
+         <div className="bg-gray-900/80 backdrop-blur-xl border-b border-white/10 pt-4 md:pt-10 px-4 md:px-10 sticky top-0 z-20 shadow-sm">
+            <div className="flex justify-between items-center mb-6">
+               <h1 className="text-xl md:text-4xl font-extrabold text-white tracking-wide">
+                     ระบบเลขฐาน (Number System)
+               </h1>
+         <button onClick={() => setIsMobileMenuOpen(true)} className="md:hidden text-gray-400 hover:text-white">
+               <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 12h16M4 18h16" /></svg>
+         </button>
+         </div>
           <div className="flex gap-6 overflow-x-auto custom-scrollbar">
             <button onClick={() => handleTabChange('convert')} className={`pb-4 text-sm md:text-base font-bold whitespace-nowrap border-b-4 transition-colors ${activeTab === 'convert' ? 'border-emerald-500 text-emerald-400' : 'border-transparent text-gray-500 hover:text-gray-300 hover:border-gray-700'}`}>การแปลงเลขฐาน</button>
             <button onClick={() => handleTabChange('calc')} className={`pb-4 text-sm md:text-base font-bold whitespace-nowrap border-b-4 transition-colors ${activeTab === 'calc' ? 'border-emerald-500 text-emerald-400' : 'border-transparent text-gray-500 hover:text-gray-300 hover:border-gray-700'}`}>การคำนวณเลขฐาน</button>
-          </div>
-        </div>
+         </div>
+         </div>
 
         <div key={activeTab} className={`p-4 md:p-10 flex flex-col items-center w-full transition-all duration-300 ease-in-out transform ${isTransitioning ? 'scale-90 opacity-0' : 'scale-100 opacity-100'}`}>
           

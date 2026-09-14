@@ -501,20 +501,20 @@ export default function BooleanApp() {
 
       <main className="flex-1 flex flex-col min-w-0 h-screen overflow-y-auto custom-scrollbar relative">
         
-        {/* 🟢 แก้ไข: Mobile Header (Drawer Trigger) */}
-        <div className="md:hidden flex items-center justify-between p-4 bg-gray-900/80 backdrop-blur-xl border-b border-white/10 sticky top-0 z-30">
-          <span className="font-extrabold text-white text-lg">พีชคณิตบูลีน</span>
-          <button onClick={() => setIsMobileMenuOpen(true)} className="text-gray-400 hover:text-white">
-             <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 12h16M4 18h16" /></svg>
-          </button>
-        </div>
-
-        <div className="hidden md:block bg-gray-900/80 backdrop-blur-xl border-b border-white/10 pt-6 md:pt-10 px-4 md:px-10 sticky top-0 z-20 shadow-sm">
-          <h1 className="text-2xl md:text-4xl font-extrabold text-white tracking-wide mb-6">พีชคณิตบูลีน (Boolean)</h1>
-          <div className="flex gap-6 overflow-x-auto custom-scrollbar">
-            <button onClick={() => handleTabChange('sop_pos')} className={`pb-4 text-sm md:text-base font-bold whitespace-nowrap border-b-4 transition-colors ${activeTab === 'sop_pos' ? 'border-purple-500 text-purple-400' : 'border-transparent text-gray-500 hover:text-gray-300 hover:border-gray-700'}`}>SOP และ POS</button>
-            <button onClick={() => handleTabChange('kmap')} className={`pb-4 text-sm md:text-base font-bold whitespace-nowrap border-b-4 transition-colors ${activeTab === 'kmap' ? 'border-purple-500 text-purple-400' : 'border-transparent text-gray-500 hover:text-gray-300 hover:border-gray-700'}`}>แผนผังคาร์โนห์ (K-Map)</button>
-            <button onClick={() => handleTabChange('circuit')} className={`pb-4 text-sm md:text-base font-bold whitespace-nowrap border-b-4 transition-colors ${activeTab === 'circuit' ? 'border-purple-500 text-purple-400' : 'border-transparent text-gray-500 hover:text-gray-300 hover:border-gray-700'}`}>วงจรลอจิก (Logic Circuit)</button>
+        {/* 🟢 ส่วนหัวที่รวมกันแล้ว แสดงผลได้ทั้งมือถือและคอมพิวเตอร์ */}
+        <div className="bg-gray-900/80 backdrop-blur-xl border-b border-white/10 pt-4 md:pt-10 px-4 md:px-10 sticky top-0 z-20 shadow-sm">
+            <div className="flex justify-between items-center mb-6">
+              <h1 className="text-xl md:text-4xl font-extrabold text-white tracking-wide">
+                  พีชคณิตบูลีน (Boolean)
+              </h1>
+        <button onClick={() => setIsMobileMenuOpen(true)} className="md:hidden text-gray-400 hover:text-white">
+              <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 12h16M4 18h16" /></svg>
+        </button>
+          </div>
+              <div className="flex gap-6 overflow-x-auto custom-scrollbar">
+                <button onClick={() => handleTabChange('sop_pos')} className={`pb-4 text-sm md:text-base font-bold whitespace-nowrap border-b-4 transition-colors ${activeTab === 'sop_pos' ? 'border-purple-500 text-purple-400' : 'border-transparent text-gray-500 hover:text-gray-300 hover:border-gray-700'}`}>SOP และ POS</button>
+                <button onClick={() => handleTabChange('kmap')} className={`pb-4 text-sm md:text-base font-bold whitespace-nowrap border-b-4 transition-colors ${activeTab === 'kmap' ? 'border-purple-500 text-purple-400' : 'border-transparent text-gray-500 hover:text-gray-300 hover:border-gray-700'}`}>แผนผังคาร์โนห์ (K-Map)</button>
+                <button onClick={() => handleTabChange('circuit')} className={`pb-4 text-sm md:text-base font-bold whitespace-nowrap border-b-4 transition-colors ${activeTab === 'circuit' ? 'border-purple-500 text-purple-400' : 'border-transparent text-gray-500 hover:text-gray-300 hover:border-gray-700'}`}>วงจรลอจิก (Logic Circuit)</button>
           </div>
         </div>
 
